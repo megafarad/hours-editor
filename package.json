@@ -11,6 +11,10 @@
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch"
   },
   "author": "Chris Carrington <chris@megafarad.com> (https://megafarad.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/megafarad/hours-editor.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "@types/react": "^19.2.7",
