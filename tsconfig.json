@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2022", // Or a newer ECMAScript target
+    "module": "NodeNext", // Or "ESNext", or "ES2022" depending on your target environment
+    "jsx": "react",
+    "moduleResolution": "NodeNext", // Crucial for proper module resolution
+    "outDir": "./dist", // Your desired output directory
+    "declaration": true, // To generate .d.mts declaration files
+    "declarationMap": true, // To generate .d.mts.map for declarations
+    "sourceMap": true // To generate .mjs.map for source maps
+  },
+  "include": ["src/**/*.ts"], // Adjust to your source file location
+  "exclude": ["node_modules"]
+}
