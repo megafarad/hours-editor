@@ -1,6 +1,6 @@
 {
   "name": "@sirhc77/hours-editor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "A tiny React component for editing \"open\" hours.",
   "main": "dist/index.cjs",
