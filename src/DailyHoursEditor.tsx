@@ -27,12 +27,14 @@ export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
                                                                       dayEndHour = 20,
                                                                       minWindowMinutes = 30,
                                                                       defaultWindowMinutes = 60,
+                                                                      layoutProps,
+                                                                      locale = "en-US"
                                                                   }) => {
 
     // Layout config
-    const pxPerMinute = 1;             // vertical scale
-    const laneWidthPx = 140;           // width of the day lane
-    const gutterWidthPx = 50;          // left time-gutter width
+    const pxPerMinute = layoutProps?.pxPerMinute ?? 1;             // vertical scale
+    const laneWidthPx = layoutProps?.laneWidthPx ?? 140;           // width of the day lane
+    const gutterWidthPx = layoutProps?.gutterWidthPx ?? 50;          // left time-gutter width
 
     const dayStartMinutes = clamp(dayStartHour * 60, 0, MINUTES_PER_DAY);
     const dayEndMinutes = clamp(
@@ -119,18 +121,23 @@ export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
         return value.map((w, index) => ({window: w, index}));
     }, [value]);
 
-    // Simple 3-tick labels (top/mid/bottom)
-    const timeScaleLabels = [
-        `${dayStartHour}:00`,
-        `${Math.round((dayStartHour + dayEndHour) / 2)}:00`,
-        `${dayEndHour}:00`,
-    ];
+    const timeScaleLabels: string[] = []
+
+    for (let i = dayStartHour; i <= dayEndHour; i++) {
+        if (i === 24) {
+            const date = new Date().setHours(0, 0, 0, 0);
+            timeScaleLabels.push(new Intl.DateTimeFormat(locale, {hour: 'numeric'}).format(date))
+        } else {
+            const date = new Date().setHours(i, 0, 0, 0);
+            timeScaleLabels.push(new Intl.DateTimeFormat(locale, {hour: 'numeric'}).format(date))
+        }
+    }
 
     return (
         <div style={{fontFamily: "system-ui, sans-serif", fontSize: 12}}>
 
             {/* Main area: left time scale + day lanes */}
-            <div style={{display: "flex"}}>
+            <div style={{display: "flex", height: "600px", overflowX: "auto", overflowY: "auto", padding: "10px"}}>
                 {/* Time scale */}
                 <div
                     style={{
@@ -141,7 +148,6 @@ export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
                         boxSizing: "border-box",
                     }}
                 >
-                    {/* top / mid / bottom labels */}
                     {timeScaleLabels.map((label, idx) => (
                         <div
                             key={idx}
@@ -149,12 +155,7 @@ export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
                                 position: "absolute",
                                 left: 0,
                                 transform: "translateY(-50%)",
-                                top:
-                                    idx === 0
-                                        ? 0
-                                        : idx === 1
-                                            ? laneHeightPx / 2
-                                            : laneHeightPx,
+                                top: idx * 60 * pxPerMinute,
                                 fontSize: 11,
                                 color: "#6b7280",
                             }}
@@ -165,7 +166,7 @@ export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
                 </div>
 
                 {/* Day lane */}
-                <div style={{display: "flex", overflowX: "auto", flex: 1}}>
+                <div style={{display: "flex"}}>
                     <DayLane
                         windows={windows}
                         pxPerMinute={pxPerMinute}

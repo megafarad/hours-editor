@@ -14,6 +14,8 @@ export interface WeeklyHoursEditorProps extends BaseHoursEditorProps {
 
     dayLabels?: Partial<Record<DayOfWeek, string>>;
 
+    startOfWeek?: DayOfWeek;
+
     renderCell?: (props: {
         day: DayOfWeek;
         dayIndex: number;
@@ -35,6 +37,9 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
                                                                         minWindowMinutes = 30,
                                                                         defaultWindowMinutes = 60,
                                                                         dayLabels,
+                                                                        startOfWeek = "monday" as DayOfWeek,
+                                                                        layoutProps,
+                                                                        locale = "en-US"
                                                                     }) => {
     const labels = useMemo(
         () => ({
@@ -45,9 +50,9 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
     );
 
     // Layout config
-    const pxPerMinute = 1;             // vertical scale
-    const laneWidthPx = 140;           // width of each day column
-    const gutterWidthPx = 50;          // left time-gutter width
+    const pxPerMinute = layoutProps?.pxPerMinute ?? 1;             // vertical scale
+    const laneWidthPx = layoutProps?.laneWidthPx ?? 140;           // width of each day column
+    const gutterWidthPx = layoutProps?.gutterWidthPx ?? 40;          // left time-gutter width
 
     const dayStartMinutes = clamp(dayStartHour * 60, 0, MINUTES_PER_DAY);
     const dayEndMinutes = clamp(
@@ -57,6 +62,14 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
     );
     const dayMinutesSpan = dayEndMinutes - dayStartMinutes;
     const laneHeightPx = dayMinutesSpan * pxPerMinute;
+
+    const sortedDays = useMemo(() => {
+        const startIndex = dayOfWeekOptions.indexOf(startOfWeek);
+        return [
+            ...dayOfWeekOptions.slice(startIndex),
+            ...dayOfWeekOptions.slice(0, startIndex),
+        ];
+    }, [startOfWeek]);
 
     const updateWindow = (
         index: number,
@@ -156,11 +169,18 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
         }, [value]);
 
     // Simple 3-tick labels (top/mid/bottom)
-    const timeScaleLabels = [
-        `${dayStartHour}:00`,
-        `${Math.round((dayStartHour + dayEndHour) / 2)}:00`,
-        `${dayEndHour}:00`,
-    ];
+    const timeScaleLabels: string[] = [];
+
+    for (let i = dayStartHour; i <= dayEndHour; i++) {
+        if (i === 24) {
+            const date = new Date().setHours(0, 0, 0, 0);
+            timeScaleLabels.push(new Intl.DateTimeFormat(locale, {hour: 'numeric'}).format(date))
+        } else {
+            const date = new Date().setHours(i, 0, 0, 0);
+            timeScaleLabels.push(new Intl.DateTimeFormat(locale, {hour: 'numeric'}).format(date))
+        }
+    }
+
 
     return (
         <div style={{fontFamily: "system-ui, sans-serif", fontSize: 12}}>
@@ -172,7 +192,7 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
                     marginLeft: gutterWidthPx,
                 }}
             >
-                {dayOfWeekOptions.map((day) => (
+                {sortedDays.map((day) => (
                     <div
                         key={day}
                         style={{
@@ -188,7 +208,7 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
             </div>
 
             {/* Main area: left time scale + day lanes */}
-            <div style={{display: "flex"}}>
+            <div style={{display: "flex", height: "600px", overflowX: "auto", overflowY: "auto", padding: "10px"}}>
                 {/* Time scale */}
                 <div
                     style={{
@@ -207,12 +227,7 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
                                 position: "absolute",
                                 left: 0,
                                 transform: "translateY(-50%)",
-                                top:
-                                    idx === 0
-                                        ? 0
-                                        : idx === 1
-                                            ? laneHeightPx / 2
-                                            : laneHeightPx,
+                                top: idx * 60 * pxPerMinute,
                                 fontSize: 11,
                                 color: "#6b7280",
                             }}
@@ -223,10 +238,9 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
                 </div>
 
                 {/* Day lanes */}
-                <div style={{display: "flex", overflowX: "auto", flex: 1}}>
-                    {dayOfWeekOptions.map((day) => {
+                <div style={{display: "flex", flex: 1}}>
+                    {sortedDays.map((day) => {
                         const windowsForDay = windowsByDay[day];
-
 
                         return (<DayLane
                             key={day}

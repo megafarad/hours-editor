@@ -1,5 +1,11 @@
 import type {TimeWindow} from "./types.js";
 
+export interface LayoutProps {
+    pxPerMinute: number;
+    laneWidthPx: number;
+    gutterWidthPx: number;
+}
+
 export interface BaseHoursEditorProps {
 
     value: TimeWindow[];
@@ -12,5 +18,9 @@ export interface BaseHoursEditorProps {
 
     dayStartHour?: number;
     dayEndHour?: number;
+
+    layoutProps?: Partial<LayoutProps>;
+
+    locale?: string;
 
 }
