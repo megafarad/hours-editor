@@ -34,7 +34,7 @@ export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
     // Layout config
     const pxPerMinute = layoutProps?.pxPerMinute ?? 1;             // vertical scale
     const laneWidthPx = layoutProps?.laneWidthPx ?? 140;           // width of the day lane
-    const gutterWidthPx = layoutProps?.gutterWidthPx ?? 50;          // left time-gutter width
+    const gutterWidthPx = layoutProps?.gutterWidthPx ?? 40;          // left time-gutter width
 
     const dayStartMinutes = clamp(dayStartHour * 60, 0, MINUTES_PER_DAY);
     const dayEndMinutes = clamp(

@@ -19,7 +19,7 @@ export interface BaseHoursEditorProps {
     dayStartHour?: number;
     dayEndHour?: number;
 
-    layoutProps?: Partial<LayoutProps>;
+    layoutProps?: LayoutProps;
 
     locale?: string;
 

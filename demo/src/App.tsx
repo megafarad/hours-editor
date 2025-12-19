@@ -15,7 +15,7 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <h1>Hours Editor Demo</h1>
-                <button onClick={() => setMode(mode === "weekly" ? "daily" : "weekly")}>Switch mode</button>
+                <button onClick={() => setMode(mode === "weekly" ? "daily" : "weekly")}>Switch to {mode === 'weekly' ? 'daily' : 'weekly'}</button>
             </header>
             {mode === "weekly" && (
                 <WeeklyHoursEditor value={weeklyValue} onChange={setWeeklyValue} dayStartHour={0} dayEndHour={24} startOfWeek='sunday' layoutProps={{pxPerMinute: .65, laneWidthPx: 80, gutterWidthPx: 40}}/>

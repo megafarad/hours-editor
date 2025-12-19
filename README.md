@@ -138,6 +138,23 @@ Times snap to `stepMinutes` boundaries and are constrained to `[dayStartHour, da
 * Example: 20 => 20:00 at the bottom.
 * Default: 20.
 
+```
+layoutProps?: {
+    pxPerMinute: number;
+    laneWidthPx: number;
+    gutterWidthPx: number;
+}
+```
+
+* Customize the grid layout.
+* `pxPerMinute` is the number of pixels per minute on the screen. Default: 1.
+* `laneWidthPx` is the width of a day column. Default: 140
+* `gutterWidthPx` is the width of the gutter between columns. Default: 40
+
+`locale?: string;`
+
+* Locale for time display.
+
 ### Additional properties for `DailyHoursEditor`:
 
 `value: DailyTimeWindow[];`
@@ -157,6 +174,10 @@ Current list of open-hour windows. Controlled value.
 `onChange: (value: WeeklyTimeWindow[]) => void;`
 
 Called whenever the user changes the grid.
+
+`startOfWeek?: DayOfWeek;`
+
+* First day of the week.
 
 ### Types
 
