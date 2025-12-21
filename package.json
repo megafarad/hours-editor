@@ -1,6 +1,6 @@
 {
   "name": "@sirhc77/hours-editor",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "A tiny React component for editing \"open\" hours.",
   "main": "dist/index.cjs",
@@ -8,7 +8,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "tsup src/index.ts --format cjs,esm --dts --watch"
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src"
   },
   "author": "Chris Carrington <chris@megafarad.com> (https://megafarad.com)",
   "repository": {
@@ -17,11 +18,17 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/react": "^19.2.7",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.26",
+    "globals": "^16.5.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.0"
   },
   "dependencies": {
     "react-rnd": "^10.5.2"
