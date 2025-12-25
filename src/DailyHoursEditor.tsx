@@ -1,6 +1,5 @@
 import React, {useMemo} from "react";
-import type {BaseHoursEditorProps} from "./HoursEditor.js";
-import type {DailyTimeWindow} from "./types.js";
+import type {BaseHoursEditorClassNames, BaseHoursEditorProps, DailyTimeWindow} from "./types.js";
 import {clamp, MINUTES_PER_DAY, minutesToTime, snapMinutes} from "./utils.js";
 import {DayLane} from "./DayLane.js";
 
@@ -17,6 +16,8 @@ export interface DailyHoursEditorProps extends BaseHoursEditorProps {
         active: boolean;
         toggle: () => void;
     }) => React.ReactNode;
+
+    classNames?: BaseHoursEditorClassNames;
 }
 
 export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
@@ -28,7 +29,8 @@ export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
                                                                       minWindowMinutes = 30,
                                                                       defaultWindowMinutes = 60,
                                                                       layoutProps,
-                                                                      locale = "en-US"
+                                                                      locale = "en-US",
+                                                                      classNames = {}
                                                                   }) => {
 
     // Layout config
@@ -134,13 +136,19 @@ export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
     }
 
     return (
-        <div style={{fontFamily: "system-ui, sans-serif", fontSize: 12}}>
+        <div
+            className={classNames.container}
+            style={classNames.container ? undefined : {fontFamily: "system-ui, sans-serif", fontSize: 12}}>
 
             {/* Main area: left time scale + day lanes */}
-            <div style={{display: "flex", height: "600px", overflowX: "auto", overflowY: "auto", padding: "10px"}}>
+            <div
+                className={classNames.mainArea}
+                style={classNames.mainArea ? undefined :
+                    {display: "flex", height: "600px", overflowX: "auto", overflowY: "auto", padding: "10px"}}>
                 {/* Time scale */}
                 <div
-                    style={{
+                    className={classNames.timeScaleGutter}
+                    style={classNames.timeScaleGutter ? undefined : {
                         width: gutterWidthPx,
                         height: laneHeightPx,
                         borderRight: "1px solid #e5e7eb",
@@ -151,7 +159,8 @@ export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
                     {timeScaleLabels.map((label, idx) => (
                         <div
                             key={idx}
-                            style={{
+                            className={classNames.timeLabel}
+                            style={classNames.timeLabel ? undefined : {
                                 position: "absolute",
                                 left: 0,
                                 transform: "translateY(-50%)",
@@ -166,7 +175,9 @@ export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
                 </div>
 
                 {/* Day lane */}
-                <div style={{display: "flex"}}>
+                <div
+                    className={classNames.lanesContainer}
+                    style={classNames.lanesContainer ? undefined : {display: "flex"}}>
                     <DayLane
                         windows={windows}
                         pxPerMinute={pxPerMinute}
@@ -184,7 +195,8 @@ export const DailyHoursEditor: React.FC<DailyHoursEditorProps> = ({
             </div>
 
             <div
-                style={{
+                className={classNames.footerNote}
+                style={classNames.footerNote ? undefined : {
                     marginTop: 4,
                     fontSize: 11,
                     color: "#6b7280",
