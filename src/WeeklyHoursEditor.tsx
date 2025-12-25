@@ -1,11 +1,19 @@
 import React, {useMemo} from "react";
-import {type DayOfWeek, dayOfWeekOptions, type WeeklyTimeWindow} from "./types.js";
+import {
+    BaseHoursEditorClassNames,
+    BaseHoursEditorProps,
+    type DayOfWeek,
+    dayOfWeekOptions,
+    type WeeklyTimeWindow
+} from "./types.js";
 import {
     DEFAULT_DAY_LABELS, minutesToTime, clamp, MINUTES_PER_DAY, snapMinutes
 } from "./utils.js";
-import type {BaseHoursEditorProps} from "./HoursEditor.js";
 import {DayLane} from "./DayLane.js";
 
+export interface WeeklyHoursEditorClassNames extends BaseHoursEditorClassNames {
+    dayHeader?: string;
+}
 
 export interface WeeklyHoursEditorProps extends BaseHoursEditorProps {
     value: WeeklyTimeWindow[];
@@ -25,6 +33,8 @@ export interface WeeklyHoursEditorProps extends BaseHoursEditorProps {
         active: boolean;
         toggle: () => void;
     }) => React.ReactNode;
+
+    classNames?: WeeklyHoursEditorClassNames;
 }
 
 
@@ -39,7 +49,8 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
                                                                         dayLabels,
                                                                         startOfWeek = "monday" as DayOfWeek,
                                                                         layoutProps,
-                                                                        locale = "en-US"
+                                                                        locale = "en-US",
+                                                                        classNames = {}
                                                                     }) => {
     const labels = useMemo(
         () => ({
@@ -183,10 +194,13 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
 
 
     return (
-        <div style={{fontFamily: "system-ui, sans-serif", fontSize: 12}}>
+        <div
+            className={classNames.container}
+            style={classNames.container ? undefined : {fontFamily: "system-ui, sans-serif", fontSize: 12}}>
             {/* Header row: time gutter + day headers */}
             <div
-                style={{
+                className={classNames.headerRow}
+                style={classNames.headerRow ? undefined : {
                     display: "flex",
                     marginBottom: 4,
                     marginLeft: gutterWidthPx,
@@ -195,7 +209,8 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
                 {sortedDays.map((day) => (
                     <div
                         key={day}
-                        style={{
+                        className={classNames.dayHeader}
+                        style={classNames.dayHeader ? undefined : {
                             width: laneWidthPx,
                             textAlign: "center",
                             fontWeight: 600,
@@ -208,10 +223,14 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
             </div>
 
             {/* Main area: left time scale + day lanes */}
-            <div style={{display: "flex", height: "600px", overflowX: "auto", overflowY: "auto", padding: "10px"}}>
+            <div
+                className={classNames.mainArea}
+                style={classNames.mainArea ? undefined :
+                    {display: "flex", height: "600px", overflowX: "auto", overflowY: "auto", padding: "10px"}}>
                 {/* Time scale */}
                 <div
-                    style={{
+                    className={classNames.timeScaleGutter}
+                    style={classNames.timeScaleGutter ? undefined : {
                         width: gutterWidthPx,
                         height: laneHeightPx,
                         borderRight: "1px solid #e5e7eb",
@@ -223,7 +242,8 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
                     {timeScaleLabels.map((label, idx) => (
                         <div
                             key={idx}
-                            style={{
+                            className={classNames.timeLabel}
+                            style={classNames.timeLabel ? undefined : {
                                 position: "absolute",
                                 left: 0,
                                 transform: "translateY(-50%)",
@@ -238,7 +258,9 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
                 </div>
 
                 {/* Day lanes */}
-                <div style={{display: "flex", flex: 1}}>
+                <div
+                    className={classNames.lanesContainer}
+                    style={classNames.lanesContainer ? undefined : {display: "flex", flex: 1}}>
                     {sortedDays.map((day) => {
                         const windowsForDay = windowsByDay[day];
 
@@ -263,7 +285,8 @@ export const WeeklyHoursEditor: React.FC<WeeklyHoursEditorProps> = ({
             </div>
 
             <div
-                style={{
+                className={classNames.footerNote}
+                style={classNames.footerNote ? undefined : {
                     marginTop: 4,
                     fontSize: 11,
                     color: "#6b7280",
